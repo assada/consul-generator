@@ -2,12 +2,25 @@
 
 
 [[projects]]
-  digest = "1:bfc483a051d3c7185ebeaa41b5bb67a4f76e742217bcaeab5661cc4b1320f392"
+  digest = "1:50e70688f601c4d8998ad3f1b7b4bda9fb8675afc78c254eae131da19c856154"
   name = "github.com/hashicorp/consul"
-  packages = ["api"]
+  packages = [
+    "api",
+    "lib/freeport",
+    "testutil",
+    "testutil/retry",
+  ]
   pruneopts = "UT"
   revision = "0bddfa23a2ebe3c0773d917fc104f53d74f7a5ec"
   version = "v1.4.0"
+
+[[projects]]
+  digest = "1:4f185079f362d62e2be3a22360ede3ad7ec077e28cf32af4598a93bc53425edd"
+  name = "github.com/hashicorp/consul-template"
+  packages = ["signals"]
+  pruneopts = "UT"
+  revision = "cfe084f488f915b3e41b00824a3e07d79e3677aa"
+  version = "v0.19.0"
 
 [[projects]]
   digest = "1:f47d6109c2034cb16bd62b220e18afd5aa9d5a1630fe5d937ad96a4fb7cbb277"
@@ -19,11 +32,61 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:4023b70cefa2291d8e6ec7784055dfe85ad630f9695d1a329803fbb229538230"
+  name = "github.com/hashicorp/go-gatedio"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8b8de1022221dde1fb52fa25d0caab46e59c8c14"
+
+[[projects]]
+  branch = "master"
   digest = "1:45aad874d3c7d5e8610427c81870fb54970b981692930ec2a319ce4cb89d7a00"
   name = "github.com/hashicorp/go-rootcerts"
   packages = ["."]
   pruneopts = "UT"
   revision = "6bb64b370b90e7ef1fa532be9e591a81c3493e00"
+
+[[projects]]
+  branch = "master"
+  digest = "1:4d9d876a856ada3b553062ac8e50331a9a539e12893c0c4a50d8ae2af4242685"
+  name = "github.com/hashicorp/go-syslog"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "326bf4a7f709d263f964a6a96558676b103f3534"
+
+[[projects]]
+  digest = "1:12ed7dcca9531e58c65cdadb8af0052724bef7fa1581380523fb9cb1215faf0d"
+  name = "github.com/hashicorp/go-uuid"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "de160f5c59f693fed329e73e291bb751fe4ea4dc"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:ea40c24cdbacd054a6ae9de03e62c5f252479b96c716375aace5c120d68647c8"
+  name = "github.com/hashicorp/hcl"
+  packages = [
+    ".",
+    "hcl/ast",
+    "hcl/parser",
+    "hcl/scanner",
+    "hcl/strconv",
+    "hcl/token",
+    "json/parser",
+    "json/scanner",
+    "json/token",
+  ]
+  pruneopts = "UT"
+  revision = "8cb6e5b959231cc1119e43259c4a608f9c51a241"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:16ae35b3a854c667baaf55ff5d455c486f7c2baf040a2727f2ef0e4b096b2a95"
+  name = "github.com/hashicorp/logutils"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a335183dfd075f638afcc820c90591ca3c97eba6"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:0dd7b7b01769f9df356dc99f9e4144bdbabf6c79041ea7c0892379c5737f3c44"
@@ -34,12 +97,12 @@
   version = "v0.8.1"
 
 [[projects]]
-  digest = "1:ecd9aa82687cf31d1585d4ac61d0ba180e42e8a6182b85bd785fcca8dfeefc1b"
-  name = "github.com/joho/godotenv"
+  digest = "1:7efe48dea4db6b35dcc15e15394b627247e5b3fb814242de986b746ba8e0abf0"
+  name = "github.com/mattn/go-shellwords"
   packages = ["."]
   pruneopts = "UT"
-  revision = "23d116af351c84513e1946b527c88823e476be13"
-  version = "v1.3.0"
+  revision = "02e3cf038dcea8290e44424da473dd12be796a8a"
+  version = "v1.0.3"
 
 [[projects]]
   digest = "1:78bbb1ba5b7c3f2ed0ea1eab57bdd3859aec7e177811563edc41198a760b06af"
@@ -50,6 +113,14 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:42eb1f52b84a06820cedc9baec2e710bfbda3ee6dac6cdb97f8b9a5066134ec6"
+  name = "github.com/mitchellh/go-testing-interface"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "6d0b8010fcc857872e42fc6c931227569016843c"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:53bc4cd4914cd7cd52139990d5170d6dc99067ae31c56530621b18b35fc30318"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
@@ -57,12 +128,30 @@
   revision = "3536a929edddb9a5b34bd6861dc4a9647cb459fe"
   version = "v1.1.2"
 
+[[projects]]
+  digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/hashicorp/consul-template/signals",
     "github.com/hashicorp/consul/api",
-    "github.com/joho/godotenv",
+    "github.com/hashicorp/consul/testutil",
+    "github.com/hashicorp/go-gatedio",
+    "github.com/hashicorp/go-rootcerts",
+    "github.com/hashicorp/go-syslog",
+    "github.com/hashicorp/hcl",
+    "github.com/hashicorp/logutils",
+    "github.com/mattn/go-shellwords",
+    "github.com/mitchellh/go-homedir",
+    "github.com/mitchellh/mapstructure",
+    "github.com/pkg/errors",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -74,6 +74,7 @@ define make-xc-target
 					-o="pkg/${1}_${2}/${NAME}${3}" \
 					-ldflags "${LD_FLAGS}" \
 					-tags "${GOTAGS}"
+		sudo chmod 777 -R pkg
   endif
   .PHONY: $1/$2
 
