@@ -107,7 +107,7 @@ func (r *Runner) Stop() {
 
 	if err := r.deletePid(); err != nil {
 		log.Printf("[WARN] (runner) could not remove pid at %q: %s",
-			config.String(*r.config.PidFile), err)
+			config.StringVal(r.config.PidFile), err)
 	}
 
 	r.stopped = true
