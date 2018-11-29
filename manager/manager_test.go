@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	dep "consul-generator/client"
+	dep "github.com/Assada/consul-generator/client"
 	"github.com/hashicorp/consul/testutil"
 )
 

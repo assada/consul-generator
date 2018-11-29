@@ -1,13 +1,13 @@
 package main
 
 import (
-	"consul-generator/config"
-	"consul-generator/logging"
-	"consul-generator/manager"
-	"consul-generator/signals"
-	"consul-generator/version"
 	"flag"
 	"fmt"
+	"github.com/Assada/consul-generator/config"
+	"github.com/Assada/consul-generator/logging"
+	"github.com/Assada/consul-generator/manager"
+	"github.com/Assada/consul-generator/signals"
+	"github.com/Assada/consul-generator/version"
 	"io"
 	"io/ioutil"
 	"log"

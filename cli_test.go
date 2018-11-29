@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"consul-generator/config"
-	"consul-generator/test"
+	"github.com/Assada/consul-generator/config"
+	"github.com/Assada/consul-generator/test"
 	gatedio "github.com/hashicorp/go-gatedio"
 )
 

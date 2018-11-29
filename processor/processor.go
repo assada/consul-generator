@@ -1,18 +1,19 @@
 package processor
 
 import (
-	"consul-generator/client"
-	"consul-generator/config"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/hashicorp/consul/api"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/Assada/consul-generator/client"
+	"github.com/Assada/consul-generator/config"
+	"github.com/hashicorp/consul/api"
 )
 
 const (
