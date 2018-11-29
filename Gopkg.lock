@@ -158,7 +158,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/Assada/consul-generator/child",
     "github.com/Assada/consul-generator/client",
     "github.com/Assada/consul-generator/config",
     "github.com/Assada/consul-generator/logging",
@@ -175,7 +174,6 @@
     "github.com/hashicorp/go-syslog",
     "github.com/hashicorp/hcl",
     "github.com/hashicorp/logutils",
-    "github.com/mattn/go-shellwords",
     "github.com/mitchellh/go-homedir",
     "github.com/mitchellh/mapstructure",
     "github.com/pkg/errors",
