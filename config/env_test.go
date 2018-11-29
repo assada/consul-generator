@@ -190,7 +190,7 @@ func TestExecConfig_Env(t *testing.T) {
 			&EnvConfig{
 				Pristine: Bool(true),
 			},
-			[]string{}, // IMPORTANT: should not be nil!
+			[]string{},
 		},
 		{
 			"custom",

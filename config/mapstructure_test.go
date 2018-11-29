@@ -23,16 +23,12 @@ func TestStringToFileModeFunc(t *testing.T) {
 		{strType, fmType, "0600", os.FileMode(0600), false},
 		{strType, fmType, "4600", os.FileMode(04600), false},
 
-		// Prepends 0 automatically
 		{strType, fmType, "600", os.FileMode(0600), false},
 
-		// Invalid file mode
 		{strType, fmType, "12345", "12345", true},
 
-		// Invalid syntax
 		{strType, fmType, "abcd", "abcd", true},
 
-		// Different type
 		{strType, strType, "0600", "0600", false},
 		{strType, u32Type, "0600", "0600", false},
 	}

@@ -151,7 +151,6 @@ func (p *Processor) Process() int {
 	return ExitCodeOK
 }
 
-// newClientSet creates a new client set from the given config.
 func newClientSet(c *config.Config) (*client.ClientSet, error) {
 	clients := client.NewClientSet()
 

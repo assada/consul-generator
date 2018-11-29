@@ -37,9 +37,6 @@ func TestMain(m *testing.M) {
 	exitCh := make(chan int, 1)
 	func() {
 		defer func() {
-			// Attempt to recover from a panic and stop the server. If we don't stop
-			// it, the panic will cause the server to remain running in the
-			// background. Here we catch the panic and the re-raise it.
 			if r := recover(); r != nil {
 				testConsul.Stop()
 				panic(r)

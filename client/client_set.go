@@ -13,21 +13,17 @@ import (
 	rootcerts "github.com/hashicorp/go-rootcerts"
 )
 
-// ClientSet is a collection of clients that dependencies use to communicate
-// with remote services like Consul or Vault.
 type ClientSet struct {
 	sync.RWMutex
 
 	consul *consulClient
 }
 
-// consulClient is a wrapper around a real Consul API client.
 type consulClient struct {
 	client    *consulapi.Client
 	transport *http.Transport
 }
 
-// CreateConsulClientInput is used as input to the CreateConsulClient function.
 type CreateConsulClientInput struct {
 	Address      string
 	Token        string
@@ -51,7 +47,6 @@ type CreateConsulClientInput struct {
 	TransportTLSHandshakeTimeout time.Duration
 }
 
-// CreateVaultClientInput is used as input to the CreateVaultClient function.
 type CreateVaultClientInput struct {
 	Address     string
 	Token       string
@@ -73,12 +68,10 @@ type CreateVaultClientInput struct {
 	TransportTLSHandshakeTimeout time.Duration
 }
 
-// NewClientSet creates a new client set that is ready to accept clients.
 func NewClientSet() *ClientSet {
 	return &ClientSet{}
 }
 
-// CreateConsulClient creates a new Consul API client from the given input.
 func (c *ClientSet) CreateConsulClient(i *CreateConsulClientInput) error {
 	consulConfig := consulapi.DefaultConfig()
 
@@ -97,7 +90,6 @@ func (c *ClientSet) CreateConsulClient(i *CreateConsulClientInput) error {
 		}
 	}
 
-	// This transport will attempt to keep connections open to the Consul server.
 	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		Dial: (&net.Dialer{
@@ -111,13 +103,11 @@ func (c *ClientSet) CreateConsulClient(i *CreateConsulClientInput) error {
 		TLSHandshakeTimeout: i.TransportTLSHandshakeTimeout,
 	}
 
-	// Configure SSL
 	if i.SSLEnabled {
 		consulConfig.Scheme = "https"
 
 		var tlsConfig tls.Config
 
-		// Custom certificate or certificate and key
 		if i.SSLCert != "" && i.SSLKey != "" {
 			cert, err := tls.LoadX509KeyPair(i.SSLCert, i.SSLKey)
 			if err != nil {
@@ -132,7 +122,6 @@ func (c *ClientSet) CreateConsulClient(i *CreateConsulClientInput) error {
 			tlsConfig.Certificates = []tls.Certificate{cert}
 		}
 
-		// Custom CA certificate
 		if i.SSLCACert != "" || i.SSLCAPath != "" {
 			rootConfig := &rootcerts.Config{
 				CAFile: i.SSLCACert,
@@ -143,10 +132,8 @@ func (c *ClientSet) CreateConsulClient(i *CreateConsulClientInput) error {
 			}
 		}
 
-		// Construct all the certificates now
 		tlsConfig.BuildNameToCertificate()
 
-		// SSL verification
 		if i.ServerName != "" {
 			tlsConfig.ServerName = i.ServerName
 			tlsConfig.InsecureSkipVerify = false
@@ -156,20 +143,16 @@ func (c *ClientSet) CreateConsulClient(i *CreateConsulClientInput) error {
 			tlsConfig.InsecureSkipVerify = true
 		}
 
-		// Save the TLS config on our transport
 		transport.TLSClientConfig = &tlsConfig
 	}
 
-	// Setup the new transport
 	consulConfig.Transport = transport
 
-	// Create the API client
 	client, err := consulapi.NewClient(consulConfig)
 	if err != nil {
 		return fmt.Errorf("client set: consul: %s", err)
 	}
 
-	// Save the data on ourselves
 	c.Lock()
 	c.consul = &consulClient{
 		client:    client,
@@ -180,14 +163,12 @@ func (c *ClientSet) CreateConsulClient(i *CreateConsulClientInput) error {
 	return nil
 }
 
-// Consul returns the Consul client for this set.
 func (c *ClientSet) Consul() *consulapi.Client {
 	c.RLock()
 	defer c.RUnlock()
 	return c.consul.client
 }
 
-// Stop closes all idle connections for any attached clients.
 func (c *ClientSet) Stop() {
 	c.Lock()
 	defer c.Unlock()

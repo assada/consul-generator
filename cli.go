@@ -62,10 +62,7 @@ func (service *Cli) setup(conf *config.Config) (*config.Config, error) {
 	return conf, nil
 }
 
-// Run accepts a slice of arguments and returns an int representing the exit
-// status from the command.
 func (cli *Cli) Run(args []string) int {
-	// Parse the flags
 	config, paths, once, dry, isVersion, err := cli.ParseFlags(args[1:])
 	if err != nil {
 		if err == flag.ErrHelp {
@@ -76,10 +73,8 @@ func (cli *Cli) Run(args []string) int {
 		return ExitCodeParseFlagsError
 	}
 
-	// Save original config (defaults + parsed flags) for handling reloads
 	cliConfig := config.Copy()
 
-	// Load configuration paths, with CLI taking precedence
 	config, err = loadConfigs(paths, cliConfig)
 	if err != nil {
 		return logError(err, ExitCodeConfigError)
@@ -87,45 +82,37 @@ func (cli *Cli) Run(args []string) int {
 
 	config.Finalize()
 
-	// Setup the config and logging
 	config, err = cli.setup(config)
 	if err != nil {
 		return logError(err, ExitCodeConfigError)
 	}
 
-	// Print version information for debugging
 	log.Printf("[INFO] %s", version.HumanVersion)
 
-	// If the version was requested, return an "error" containing the version
-	// information. This might sound weird, but most *nix applications actually
-	// print their version on stderr anyway.
 	if isVersion {
 		log.Printf("[DEBUG] (cli) version flag was given, exiting now")
 		fmt.Fprintf(cli.errStream, "%s\n", version.HumanVersion)
 		return ExitCodeOK
 	}
 
-	// Initial runner
 	runner, err := manager.NewRunner(config, dry, once)
 	if err != nil {
 		return logError(err, ExitCodeRunnerError)
 	}
 	go runner.Start()
 
-	// Listen for signals
 	signal.Notify(cli.signalCh)
 
 	for {
 		select {
 		case err := <-runner.ErrCh:
-			// Check if the runner's error returned a specific exit status, and return
-			// that value. If no value was given, return a generic exit status.
 			code := ExitCodeRunnerError
 			if typed, ok := err.(manager.ErrExitable); ok {
 				code = typed.ExitStatus()
 			}
 			return logError(err, code)
 		case <-runner.DoneCh:
+			log.Printf("[INFO] (cli) received finish")
 			runner.Stop()
 			return ExitCodeOK
 		case s := <-cli.signalCh:
@@ -142,7 +129,6 @@ func (cli *Cli) Run(args []string) int {
 				}
 				config.Finalize()
 
-				// Load the new configuration from disk
 				config, err = cli.setup(config)
 				if err != nil {
 					return logError(err, ExitCodeConfigError)
@@ -167,7 +153,6 @@ func (cli *Cli) Run(args []string) int {
 	}
 }
 
-// stop is used internally to shutdown a running CLI
 func (cli *Cli) stop() {
 	cli.Lock()
 	defer cli.Unlock()
@@ -180,10 +165,6 @@ func (cli *Cli) stop() {
 	cli.stopped = true
 }
 
-// ParseFlags is a helper function for parsing command line flags using Go's
-// Flag library. This is extracted into a helper to keep the main function
-// small, but it also makes writing tests for parsing command line arguments
-// much easier and cleaner.
 func (cli *Cli) ParseFlags(args []string) (*config.Config, []string, bool, bool, bool, error) {
 	var dry, once, isVersion bool
 
@@ -197,10 +178,8 @@ func (cli *Cli) ParseFlags(args []string) (*config.Config, []string, bool, bool,
 		c = c.Merge(envConfig)
 	}
 
-	// configPaths stores the list of configuration paths on disk
 	configPaths := make([]string, 0, 6)
 
-	// Parse the flags and options
 	flags := flag.NewFlagSet(version.Name, flag.ContinueOnError)
 	flags.SetOutput(ioutil.Discard)
 	flags.Usage = func() {}
@@ -368,12 +347,10 @@ func (cli *Cli) ParseFlags(args []string) (*config.Config, []string, bool, bool,
 	flags.BoolVar(&isVersion, "v", false, "")
 	flags.BoolVar(&isVersion, "version", false, "")
 
-	// If there was a parser error, stop
 	if err := flags.Parse(args); err != nil {
 		return nil, nil, false, false, false, err
 	}
 
-	// Error if extra arguments are present
 	args = flags.Args()
 	if len(args) > 0 {
 		return nil, nil, false, false, false, fmt.Errorf("cli: extra args: %q", args)
@@ -382,10 +359,6 @@ func (cli *Cli) ParseFlags(args []string) (*config.Config, []string, bool, bool,
 	return c, configPaths, once, dry, isVersion, nil
 }
 
-// loadConfigs loads the configuration from the list of paths. The optional
-// configuration is the list of overrides to apply at the very end, taking
-// precedence over any configurations that were loaded from the paths. If any
-// errors occur when reading or parsing those sub-configs, it is returned.
 func loadConfigs(paths []string, o *config.Config) (*config.Config, error) {
 	finalC := config.DefaultConfig()
 
@@ -403,7 +376,6 @@ func loadConfigs(paths []string, o *config.Config) (*config.Config, error) {
 	return finalC, nil
 }
 
-// logError logs an error message and then returns the given status.
 func logError(err error, status int) int {
 	log.Printf("[ERR] (cli) %s", err)
 	return status
@@ -497,6 +469,15 @@ Options:
 
   -pid-file=<path>
       Path on disk to write the PID of the process
+
+  -from=<path>
+      Consul path where files stored
+
+  -to=<path>
+      Path on disk to write generated files
+
+  -interval=<int>
+      Key update rate interval 
 
   -reload-signal=<signal>
       Signal to listen to reload configuration
