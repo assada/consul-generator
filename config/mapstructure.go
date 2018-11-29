@@ -9,9 +9,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-// StringToFileModeFunc returns a function that converts strings to os.FileMode
-// value. This is designed to be used with mapstructure for parsing out a
-// filemode value.
 func StringToFileModeFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
@@ -24,7 +21,6 @@ func StringToFileModeFunc() mapstructure.DecodeHookFunc {
 			return data, nil
 		}
 
-		// Convert it by parsing
 		v, err := strconv.ParseUint(data.(string), 8, 12)
 		if err != nil {
 			return data, err
@@ -33,9 +29,6 @@ func StringToFileModeFunc() mapstructure.DecodeHookFunc {
 	}
 }
 
-// ConsulStringToStructFunc checks if the value set for the key should actually
-// be a struct and sets the appropriate value in the struct. This is for
-// backwards-compatability with older versions of Consul Template.
 func ConsulStringToStructFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,

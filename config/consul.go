@@ -2,31 +2,20 @@ package config
 
 import "fmt"
 
-// ConsulConfig contains the configurations options for connecting to a
-// Consul cluster.
 type ConsulConfig struct {
-	// Address is the address of the Consul server. It may be an IP or FQDN.
 	Address *string
 
-	// Auth is the HTTP basic authentication for communicating with Consul.
 	Auth *AuthConfig `mapstructure:"auth"`
 
-	// Retry is the configuration for specifying how to behave on failure.
 	Retry *RetryConfig `mapstructure:"retry"`
 
-	// SSL indicates we should use a secure connection while talking to
-	// Consul. This requires Consul to be configured to serve HTTPS.
 	SSL *SSLConfig `mapstructure:"ssl"`
 
-	// Token is the token to communicate with Consul securely.
 	Token *string
 
-	// Transport configures the low-level network connection details.
 	Transport *TransportConfig `mapstructure:"transport"`
 }
 
-// DefaultConsulConfig returns a configuration that is populated with the
-// default values.
 func DefaultConsulConfig() *ConsulConfig {
 	return &ConsulConfig{
 		Auth:      DefaultAuthConfig(),
@@ -36,7 +25,6 @@ func DefaultConsulConfig() *ConsulConfig {
 	}
 }
 
-// Copy returns a deep copy of this configuration.
 func (c *ConsulConfig) Copy() *ConsulConfig {
 	if c == nil {
 		return nil
@@ -67,10 +55,6 @@ func (c *ConsulConfig) Copy() *ConsulConfig {
 	return &o
 }
 
-// Merge combines all values in this configuration with the values in the other
-// configuration, with values in the other configuration taking precedence.
-// Maps and slices are merged, most other values are overwritten. Complex
-// structs define their own merge functionality.
 func (c *ConsulConfig) Merge(o *ConsulConfig) *ConsulConfig {
 	if c == nil {
 		if o == nil {
@@ -112,7 +96,6 @@ func (c *ConsulConfig) Merge(o *ConsulConfig) *ConsulConfig {
 	return r
 }
 
-// Finalize ensures there no nil pointers.
 func (c *ConsulConfig) Finalize() {
 	if c.Address == nil {
 		c.Address = stringFromEnv([]string{
@@ -148,7 +131,6 @@ func (c *ConsulConfig) Finalize() {
 	c.Transport.Finalize()
 }
 
-// GoString defines the printable version of this struct.
 func (c *ConsulConfig) GoString() string {
 	if c == nil {
 		return "(*ConsulConfig)(nil)"

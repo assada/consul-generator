@@ -3,11 +3,9 @@ package config
 import "fmt"
 
 const (
-	// DefaultSSLVerify is the default value for SSL verification.
 	DefaultSSLVerify = true
 )
 
-// SSLConfig is the configuration for SSL.
 type SSLConfig struct {
 	CaCert     *string `mapstructure:"ca_cert"`
 	CaPath     *string `mapstructure:"ca_path"`
@@ -18,13 +16,10 @@ type SSLConfig struct {
 	Verify     *bool   `mapstructure:"verify"`
 }
 
-// DefaultSSLConfig returns a configuration that is populated with the
-// default values.
 func DefaultSSLConfig() *SSLConfig {
 	return &SSLConfig{}
 }
 
-// Copy returns a deep copy of this configuration.
 func (c *SSLConfig) Copy() *SSLConfig {
 	if c == nil {
 		return nil
@@ -41,10 +36,6 @@ func (c *SSLConfig) Copy() *SSLConfig {
 	return &o
 }
 
-// Merge combines all values in this configuration with the values in the other
-// configuration, with values in the other configuration taking precedence.
-// Maps and slices are merged, most other values are overwritten. Complex
-// structs define their own merge functionality.
 func (c *SSLConfig) Merge(o *SSLConfig) *SSLConfig {
 	if c == nil {
 		if o == nil {
@@ -90,7 +81,6 @@ func (c *SSLConfig) Merge(o *SSLConfig) *SSLConfig {
 	return r
 }
 
-// Finalize ensures there no nil pointers.
 func (c *SSLConfig) Finalize() {
 	if c.Enabled == nil {
 		c.Enabled = Bool(false ||
@@ -127,7 +117,6 @@ func (c *SSLConfig) Finalize() {
 	}
 }
 
-// GoString defines the printable version of this struct.
 func (c *SSLConfig) GoString() string {
 	if c == nil {
 		return "(*SSLConfig)(nil)"

@@ -479,21 +479,16 @@ func TestCLI_Run(t *testing.T) {
 			})
 		}()
 
-		// Wait for the file to be available
 		test.WaitForContents(t, 2*time.Second, f.Name(), "hello")
 
-		// Write new contents, which wil not be picked up until a reload
 		if _, err := f.WriteString(`world`); err != nil {
 			t.Fatal(err)
 		}
 
-		// Trigger a reload
 		cli.signalCh <- syscall.SIGHUP
 
-		// Wait for the file contents
 		test.WaitForContents(t, 2*time.Second, f.Name(), "helloworld")
 
-		// We are done now
 		cli.stop()
 
 		select {

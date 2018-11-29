@@ -7,67 +7,31 @@ import (
 )
 
 const (
-	// DefaultDialKeepAlive is the default amount of time to keep alive
-	// connections.
-	DefaultDialKeepAlive = 30 * time.Second
-
-	// DefaultDialTimeout is the amount of time to attempt to dial before timing
-	// out.
-	DefaultDialTimeout = 30 * time.Second
-
-	// DefaultIdleConnTimeout is the default connection timeout for idle
-	// connections.
-	DefaultIdleConnTimeout = 90 * time.Second
-
-	// DefaultMaxIdleConns is the default number of maximum idle connections.
-	DefaultMaxIdleConns = 100
-
-	// DefaultTLSHandshakeTimeout is the amount of time to negotiate the TLS
-	// handshake.
+	DefaultDialKeepAlive       = 30 * time.Second
+	DefaultDialTimeout         = 30 * time.Second
+	DefaultIdleConnTimeout     = 90 * time.Second
+	DefaultMaxIdleConns        = 100
 	DefaultTLSHandshakeTimeout = 10 * time.Second
 )
 
 var (
-	// DefaultMaxIdleConnsPerHost is the default number of idle connections to use
-	// per host.
 	DefaultMaxIdleConnsPerHost = runtime.GOMAXPROCS(0) + 1
 )
 
-// TransportConfig is the configuration to tune low-level APIs for the
-// interactions on the wire.
 type TransportConfig struct {
-	// DialKeepAlive is the amount of time for keep-alives.
-	DialKeepAlive *time.Duration `mapstructure:"dial_keep_alive"`
-
-	// DialTimeout is the amount of time to wait to establish a connection.
-	DialTimeout *time.Duration `mapstructure:"dial_timeout"`
-
-	// DisableKeepAlives determines if keep-alives should be used. Disabling this
-	// significantly decreases performance.
-	DisableKeepAlives *bool `mapstructure:"disable_keep_alives"`
-
-	// IdleConnTimeout is the timeout for idle connections.
-	IdleConnTimeout *time.Duration `mapstructure:"idle_conn_timeout"`
-
-	// MaxIdleConns is the maximum number of total idle connections.
-	MaxIdleConns *int `mapstructure:"max_idle_conns"`
-
-	// MaxIdleConnsPerHost is the maximum number of idle connections per remote
-	// host.
-	MaxIdleConnsPerHost *int `mapstructure:"max_idle_conns_per_host"`
-
-	// TLSHandshakeTimeout is the amount of time to wait to complete the TLS
-	// handshake.
+	DialKeepAlive       *time.Duration `mapstructure:"dial_keep_alive"`
+	DialTimeout         *time.Duration `mapstructure:"dial_timeout"`
+	DisableKeepAlives   *bool          `mapstructure:"disable_keep_alives"`
+	IdleConnTimeout     *time.Duration `mapstructure:"idle_conn_timeout"`
+	MaxIdleConns        *int           `mapstructure:"max_idle_conns"`
+	MaxIdleConnsPerHost *int           `mapstructure:"max_idle_conns_per_host"`
 	TLSHandshakeTimeout *time.Duration `mapstructure:"tls_handshake_timeout"`
 }
 
-// DefaultTransportConfig returns a configuration that is populated with the
-// default values.
 func DefaultTransportConfig() *TransportConfig {
 	return &TransportConfig{}
 }
 
-// Copy returns a deep copy of this configuration.
 func (c *TransportConfig) Copy() *TransportConfig {
 	if c == nil {
 		return nil
@@ -86,10 +50,6 @@ func (c *TransportConfig) Copy() *TransportConfig {
 	return &o
 }
 
-// Merge combines all values in this configuration with the values in the other
-// configuration, with values in the other configuration taking precedence.
-// Maps and slices are merged, most other values are overwritten. Complex
-// structs define their own merge functionality.
 func (c *TransportConfig) Merge(o *TransportConfig) *TransportConfig {
 	if c == nil {
 		if o == nil {
@@ -135,7 +95,6 @@ func (c *TransportConfig) Merge(o *TransportConfig) *TransportConfig {
 	return r
 }
 
-// Finalize ensures there no nil pointers.
 func (c *TransportConfig) Finalize() {
 	if c.DialKeepAlive == nil {
 		c.DialKeepAlive = TimeDuration(DefaultDialKeepAlive)
@@ -166,7 +125,6 @@ func (c *TransportConfig) Finalize() {
 	}
 }
 
-// GoString defines the printable version of this struct.
 func (c *TransportConfig) GoString() string {
 	if c == nil {
 		return "(*TransportConfig)(nil)"

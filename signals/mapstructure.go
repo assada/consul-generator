@@ -6,10 +6,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-// StringToSignalFunc parses a string as a signal based on the signal lookup
-// table. If the user supplied an empty string or nil, a special "nil signal"
-// is returned. Clients should check for this value and set the response back
-// nil after mapstructure finishes parsing.
 func StringToSignalFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,

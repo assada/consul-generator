@@ -14,7 +14,6 @@ func TestSyslogFilter(t *testing.T) {
 		t.SkipNow()
 	}
 
-	// Travis does not support syslog for some reason
 	if travis := os.Getenv("TRAVIS"); travis != "" {
 		t.SkipNow()
 	}

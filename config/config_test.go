@@ -345,7 +345,6 @@ func TestParse(t *testing.T) {
 			},
 			false,
 		},
-		// General validation
 		{
 			"invalid_key",
 			`not_a_valid_key = "hello"`,

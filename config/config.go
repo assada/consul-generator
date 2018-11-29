@@ -20,55 +20,29 @@ import (
 )
 
 const (
-	// DefaultLogLevel is the default logging level.
 	DefaultLogLevel = "WARN"
 
-	// DefaultMaxStale is the default staleness permitted. This enables stale
-	// queries by default for performance reasons.
-	DefaultMaxStale = 2 * time.Second
-
-	// DefaultReloadSignal is the default signal for reload.
 	DefaultReloadSignal = syscall.SIGHUP
 
-	// DefaultKillSignal is the default signal for termination.
 	DefaultKillSignal = syscall.SIGINT
 )
 
 var (
-	// homePath is the location to the user's home directory.
 	homePath, _ = homedir.Dir()
 )
 
-// Config is used to configure Consul Template
 type Config struct {
-	// Consul is the configuration for connecting to a Consul cluster.
-	Consul *ConsulConfig `mapstructure:"consul"`
-
-	// KillSignal is the signal to listen for a graceful terminate event.
-	KillSignal *os.Signal `mapstructure:"kill_signal"`
-
-	// LogLevel is the level with which to log for this config.
-	LogLevel *string `mapstructure:"log_level"`
-
-	// PidFile is the path on disk where a PID file should be written containing
-	// this processes PID.
-	PidFile *string `mapstructure:"pid_file"`
-
-	// ReloadSignal is the signal to listen for a reload event.
-	ReloadSignal *os.Signal `mapstructure:"reload_signal"`
-
-	// Syslog is the configuration for syslog.
-	Syslog *SyslogConfig `mapstructure:"syslog"`
-
-	From *string `mapstructure:"from"`
-
-	To *string `mapstructure:"to"`
-
-	Interval *time.Duration `mapstructure:"interval"`
+	Consul       *ConsulConfig  `mapstructure:"consul"`
+	KillSignal   *os.Signal     `mapstructure:"kill_signal"`
+	LogLevel     *string        `mapstructure:"log_level"`
+	PidFile      *string        `mapstructure:"pid_file"`
+	ReloadSignal *os.Signal     `mapstructure:"reload_signal"`
+	Syslog       *SyslogConfig  `mapstructure:"syslog"`
+	From         *string        `mapstructure:"from"`
+	To           *string        `mapstructure:"to"`
+	Interval     *time.Duration `mapstructure:"interval"`
 }
 
-// Copy returns a deep copy of the current configuration. This is useful because
-// the nested data structures may be shared.
 func (c *Config) Copy() *Config {
 	var o Config
 
@@ -99,8 +73,6 @@ func (c *Config) Copy() *Config {
 	return &o
 }
 
-// Merge merges the values in config into this config object. Values in the
-// config object overwrite the values in c.
 func (c *Config) Merge(o *Config) *Config {
 	if c == nil {
 		if o == nil {
@@ -154,14 +126,12 @@ func (c *Config) Merge(o *Config) *Config {
 	return r
 }
 
-// Parse parses the given string contents as a config
 func Parse(s string) (*Config, error) {
 	var shadow interface{}
 	if err := hcl.Decode(&shadow, s); err != nil {
 		return nil, errors.Wrap(err, "error decoding config")
 	}
 
-	// Convert to a map and flatten the keys we want to flatten
 	parsed, ok := shadow.(map[string]interface{})
 	if !ok {
 		return nil, errors.New("error converting config")
@@ -183,13 +153,10 @@ func Parse(s string) (*Config, error) {
 		"from",
 		"to",
 		"interval",
-		"wait",
 	})
 
-	// Create a new, empty config
 	var c Config
 
-	// Use mapstructure to populate the basic config fields
 	var md mapstructure.Metadata
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 		DecodeHook: mapstructure.ComposeDecodeHookFunc(
@@ -213,8 +180,6 @@ func Parse(s string) (*Config, error) {
 	return &c, nil
 }
 
-// Must returns a config object that must compile. If there are any errors, this
-// function will panic. This is most useful in testing or constants.
 func Must(s string) *Config {
 	c, err := Parse(s)
 	if err != nil {
@@ -223,16 +188,12 @@ func Must(s string) *Config {
 	return c
 }
 
-// TestConfig returns a default, finalized config, with the provided
-// configuration taking precedence.
 func TestConfig(c *Config) *Config {
 	d := DefaultConfig().Merge(c)
 	d.Finalize()
 	return d
 }
 
-// FromFile reads the configuration file at the given path and returns a new
-// Config struct with the data populated.
 func FromFile(path string) (*Config, error) {
 	c, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -246,44 +207,33 @@ func FromFile(path string) (*Config, error) {
 	return config, nil
 }
 
-// FromPath iterates and merges all configuration files in a given
-// directory, returning the resulting config.
 func FromPath(path string) (*Config, error) {
-	// Ensure the given filepath exists
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return nil, errors.Wrap(err, "missing file/folder: "+path)
 	}
 
-	// Check if a file was given or a path to a directory
 	stat, err := os.Stat(path)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed stating file: "+path)
 	}
 
-	// Recursively parse directories, single load files
 	if stat.Mode().IsDir() {
-		// Ensure the given filepath has at least one config file
 		_, err := ioutil.ReadDir(path)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed listing dir: "+path)
 		}
 
-		// Create a blank config to merge off of
 		var c *Config
 
-		// Potential bug: Walk does not follow symlinks!
 		err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-			// If WalkFunc had an error, just return it
 			if err != nil {
 				return err
 			}
 
-			// Do nothing for directories
 			if info.IsDir() {
 				return nil
 			}
 
-			// Parse and merge the config
 			newConfig, err := FromFile(path)
 			if err != nil {
 				return err
@@ -305,7 +255,6 @@ func FromPath(path string) (*Config, error) {
 	return nil, fmt.Errorf("unknown filetype: %q", stat.Mode().String())
 }
 
-// GoString defines the printable version of this struct.
 func (c *Config) GoString() string {
 	if c == nil {
 		return "(*Config)(nil)"
@@ -334,8 +283,6 @@ func (c *Config) GoString() string {
 	)
 }
 
-// DefaultConfig returns the default configuration struct. Certain environment
-// variables may be set which control the values for the default configuration.
 func DefaultConfig() *Config {
 	return &Config{
 		Consul:   DefaultConsulConfig(),
@@ -346,11 +293,6 @@ func DefaultConfig() *Config {
 	}
 }
 
-// Finalize ensures all configuration options have the default values, so it
-// is safe to dereference the pointers later down the line. It also
-// intelligently tries to activate stanzas that should be "enabled" because
-// data was given, but the user did not explicitly add "Enabled: true" to the
-// configuration.
 func (c *Config) Finalize() {
 
 	if c.To == nil {
@@ -434,9 +376,6 @@ func boolFromEnv(list []string, def bool) *bool {
 	return Bool(def)
 }
 
-// flattenKeys is a function that takes a map[string]interface{} and recursively
-// flattens any keys that are a []map[string]interface{} where the key is in the
-// given list of keys.
 func flattenKeys(m map[string]interface{}, keys []string) {
 	keyMap := make(map[string]struct{})
 	for _, key := range keys {
@@ -446,7 +385,6 @@ func flattenKeys(m map[string]interface{}, keys []string) {
 	var flatten func(map[string]interface{}, string)
 	flatten = func(m map[string]interface{}, parent string) {
 		for k, v := range m {
-			// Calculate the map key, since it could include a parent.
 			mapKey := k
 			if parent != "" {
 				mapKey = parent + "." + k

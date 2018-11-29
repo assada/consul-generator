@@ -7,24 +7,19 @@ import (
 )
 
 var (
-	// ErrAuthStringEmpty is the error returned with authentication is provided,
-	// but empty.
 	ErrAuthStringEmpty = errors.New("auth: cannot be empty")
 )
 
-// AuthConfig is the HTTP basic authentication data.
 type AuthConfig struct {
 	Enabled  *bool   `mapstructure:"enabled"`
 	Username *string `mapstructure:"username"`
 	Password *string `mapstructure:"password"`
 }
 
-// DefaultAuthConfig is the default configuration.
 func DefaultAuthConfig() *AuthConfig {
 	return &AuthConfig{}
 }
 
-// ParseAuthConfig parses the auth into username:password.
 func ParseAuthConfig(s string) (*AuthConfig, error) {
 	if s == "" {
 		return nil, ErrAuthStringEmpty
@@ -43,7 +38,6 @@ func ParseAuthConfig(s string) (*AuthConfig, error) {
 	return &a, nil
 }
 
-// Copy returns a deep copy of this configuration.
 func (c *AuthConfig) Copy() *AuthConfig {
 	if c == nil {
 		return nil
@@ -56,10 +50,6 @@ func (c *AuthConfig) Copy() *AuthConfig {
 	return &o
 }
 
-// Merge combines all values in this configuration with the values in the other
-// configuration, with values in the other configuration taking precedence.
-// Maps and slices are merged, most other values are overwritten. Complex
-// structs define their own merge functionality.
 func (c *AuthConfig) Merge(o *AuthConfig) *AuthConfig {
 	if c == nil {
 		if o == nil {
@@ -89,7 +79,6 @@ func (c *AuthConfig) Merge(o *AuthConfig) *AuthConfig {
 	return r
 }
 
-// Finalize ensures there no nil pointers.
 func (c *AuthConfig) Finalize() {
 	if c.Enabled == nil {
 		c.Enabled = Bool(false ||
@@ -109,7 +98,6 @@ func (c *AuthConfig) Finalize() {
 	}
 }
 
-// GoString defines the printable version of this struct.
 func (c *AuthConfig) GoString() string {
 	if c == nil {
 		return "(*AuthConfig)(nil)"
@@ -126,9 +114,6 @@ func (c *AuthConfig) GoString() string {
 	)
 }
 
-// String is the string representation of this authentication. If authentication
-// is not enabled, this returns the empty string. The username and password will
-// be separated by a colon.
 func (c *AuthConfig) String() string {
 	if !BoolVal(c.Enabled) {
 		return ""

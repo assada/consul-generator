@@ -13,33 +13,18 @@ import (
 	"github.com/Assada/consul-generator/processor"
 )
 
-const (
-	// saneViewLimit is the number of views that we consider "sane" before we
-	// warn the user that they might be DDoSing their Consul cluster.
-	saneViewLimit = 128
-)
-
-// Runner responsible rendering Templates and invoking Commands.
 type Runner struct {
-	ErrCh  chan error
-	DoneCh chan bool
-
-	ticker *time.Ticker
-
-	config *config.Config
-
-	dry, once bool
-
+	ErrCh                chan error
+	DoneCh               chan bool
+	ticker               *time.Ticker
+	config               *config.Config
+	dry, once            bool
 	outStream, errStream io.Writer
 	inStream             io.Reader
-
-	stopLock sync.Mutex
-
-	stopped bool
+	stopLock             sync.Mutex
+	stopped              bool
 }
 
-// NewRunner accepts a slice of TemplateConfigs and returns a pointer to the new
-// Runner and any error that occurred during creation.
 func NewRunner(config *config.Config, dry, once bool) (*Runner, error) {
 	log.Printf("[INFO] (runner) creating new runner (dry: %v, once: %v)", dry, once)
 
@@ -57,21 +42,14 @@ func NewRunner(config *config.Config, dry, once bool) (*Runner, error) {
 	return runner, nil
 }
 
-// Start begins the polling for this runner. Any errors that occur will cause
-// this function to push an item onto the runner's error channel and the halt
-// execution. This function is blocking and should be called as a goroutine.
 func (r *Runner) Start() {
 	log.Printf("[INFO] (runner) starting")
 
-	// Create the pid before doing anything.
 	if err := r.storePid(); err != nil {
 		r.ErrCh <- err
 		return
 	}
 
-	// Fire an initial run to parse all the templates and setup the first-pass
-	// dependencies. This also forces any templates that have no dependencies to
-	// be rendered immediately (since they are already renderable).
 	log.Printf("[DEBUG] (runner) running initial templates")
 	if err := r.Run(); err != nil {
 		r.ErrCh <- err
@@ -94,7 +72,6 @@ func (r *Runner) Start() {
 
 }
 
-// Stop halts the execution of this runner and its subprocesses.
 func (r *Runner) Stop() {
 	r.stopLock.Lock()
 	defer r.stopLock.Unlock()
@@ -115,27 +92,16 @@ func (r *Runner) Stop() {
 	close(r.DoneCh)
 }
 
-// Run iterates over each template in this Runner and conditionally executes
-// the template rendering and command execution.
-//
-// The template is rendered atomically. If and only if the template render
-// completes successfully, the optional commands will be executed, if given.
-// Please note that all templates are rendered **and then** any commands are
-// executed.
 func (r *Runner) Run() error {
 	log.Printf("[DEBUG] (runner) initiating run")
 
 	return nil
 }
 
-// init() creates the Runner's underlying data structures and returns an error
-// if any problems occur.
 func (r *Runner) init() error {
-	// Ensure default configuration values
 	r.config = config.DefaultConfig().Merge(r.config)
 	r.config.Finalize()
 
-	// Print the final config for debugging
 	result, err := json.Marshal(r.config)
 	if err != nil {
 		return err
@@ -152,7 +118,6 @@ func (r *Runner) init() error {
 	return nil
 }
 
-// storePid is used to write out a PID file to disk.
 func (r *Runner) storePid() error {
 	path := config.StringVal(r.config.PidFile)
 	if path == "" {
@@ -175,7 +140,6 @@ func (r *Runner) storePid() error {
 	return nil
 }
 
-// deletePid is used to remove the PID on exit.
 func (r *Runner) deletePid() error {
 	path := config.StringVal(r.config.PidFile)
 	if path == "" {
@@ -199,12 +163,10 @@ func (r *Runner) deletePid() error {
 	return nil
 }
 
-// SetOutStream modifies runner output stream. Defaults to stdout.
 func (r *Runner) SetOutStream(out io.Writer) {
 	r.outStream = out
 }
 
-// SetErrStream modifies runner error stream. Defaults to stderr.
 func (r *Runner) SetErrStream(err io.Writer) {
 	r.errStream = err
 }

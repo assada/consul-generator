@@ -7,11 +7,8 @@ import (
 	"strings"
 )
 
-// SIGNIL is the nil signal.
 var SIGNIL os.Signal = new(NilSignal)
 
-// ValidSignals is the list of all valid signals. This is built at runtime
-// because it is OS-dependent.
 var ValidSignals []string
 
 func init() {
@@ -23,8 +20,6 @@ func init() {
 	ValidSignals = valid
 }
 
-// Parse parses the given string as a signal. If the signal is not found,
-// an error is returned.
 func Parse(s string) (os.Signal, error) {
 	sig, ok := SignalLookup[strings.ToUpper(s)]
 	if !ok {

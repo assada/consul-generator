@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/logutils"
 )
 
-// syslogPriorityMap is used to map a log level to a syslog priority level.
 var syslogPriorityMap = map[string]gsyslog.Priority{
 	"DEBUG": gsyslog.LOG_INFO,
 	"INFO":  gsyslog.LOG_NOTICE,
@@ -15,21 +14,16 @@ var syslogPriorityMap = map[string]gsyslog.Priority{
 	"ERR":   gsyslog.LOG_ERR,
 }
 
-// SyslogWrapper is used to cleanup log messages before writing them to a
-// Syslogger. Implements the io.Writer interface.
 type SyslogWrapper struct {
 	l    gsyslog.Syslogger
 	filt *logutils.LevelFilter
 }
 
-// Write is used to implement io.Writer.
 func (s *SyslogWrapper) Write(p []byte) (int, error) {
-	// Skip syslog if the log level doesn't apply
 	if !s.filt.Check(p) {
 		return 0, nil
 	}
 
-	// Extract log level
 	var level string
 	afterLevel := p
 	x := bytes.IndexByte(p, '[')
@@ -41,13 +35,11 @@ func (s *SyslogWrapper) Write(p []byte) (int, error) {
 		}
 	}
 
-	// Each log level will be handled by a specific syslog priority.
 	priority, ok := syslogPriorityMap[level]
 	if !ok {
 		priority = gsyslog.LOG_NOTICE
 	}
 
-	// Attempt the write
 	err := s.l.WriteLevel(priority, afterLevel)
 	return len(p), err
 }

@@ -11,30 +11,22 @@ import (
 	"github.com/hashicorp/logutils"
 )
 
-// Levels are the log levels we respond to=o.
 var Levels = []logutils.LogLevel{"TRACE", "DEBUG", "INFO", "WARN", "ERR"}
 
-// Config is the configuration for this log setup.
 type Config struct {
-	// Name is the progname as it will appear in syslog output (if enabled).
 	Name string `json:"name"`
 
-	// Level is the log level to use.
 	Level string `json:"level"`
 
-	// Syslog and SyslogFacility are the syslog configuration options.
 	Syslog         bool   `json:"syslog"`
 	SyslogFacility string `json:"syslog_facility"`
 
-	// Writer is the output where logs should go. If syslog is enabled, data will
-	// be written to writer in addition to syslog.
 	Writer io.Writer `json:"-"`
 }
 
 func Setup(config *Config) error {
 	var logOutput io.Writer
 
-	// Setup the default logging
 	logFilter := NewLogFilter()
 	logFilter.MinLevel = logutils.LogLevel(strings.ToUpper(config.Level))
 	logFilter.Writer = config.Writer
@@ -47,7 +39,6 @@ func Setup(config *Config) error {
 			config.Level, strings.Join(levels, ", "))
 	}
 
-	// Check if syslog is enabled
 	if config.Syslog {
 		log.Printf("[DEBUG] (logging) enabling syslog on %s", config.SyslogFacility)
 
@@ -67,8 +58,6 @@ func Setup(config *Config) error {
 	return nil
 }
 
-// NewLogFilter returns a LevelFilter that is configured with the log levels that
-// we use.
 func NewLogFilter() *logutils.LevelFilter {
 	return &logutils.LevelFilter{
 		Levels:   Levels,
@@ -77,7 +66,6 @@ func NewLogFilter() *logutils.LevelFilter {
 	}
 }
 
-// ValidateLevelFilter verifies that the log levels within the filter are valid.
 func ValidateLevelFilter(min logutils.LogLevel, filter *logutils.LevelFilter) bool {
 	for _, level := range filter.Levels {
 		if level == min {
