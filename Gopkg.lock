@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:4715c93d153a71918d329a232bf92685f10d7c476e11d3b72e3c6988dc67cac9"
+  digest = "1:56fc2dcfc482ed0ee79ff15decf56710266b70c6a7ff8c62501b86f5b6e8b0bf"
   name = "github.com/Assada/consul-generator"
   packages = [
     "client",
@@ -15,8 +15,8 @@
     "version",
   ]
   pruneopts = "UT"
-  revision = "fa40f0793ae3b31870fd3207f761567e011ac181"
-  version = "v0.2.2"
+  revision = "2163795a8a24c932b1c1e2c20aeb76aaf11054ef"
+  version = "v0.2.4"
 
 [[projects]]
   digest = "1:50e70688f601c4d8998ad3f1b7b4bda9fb8675afc78c254eae131da19c856154"
