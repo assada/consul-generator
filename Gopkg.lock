@@ -2,10 +2,9 @@
 
 
 [[projects]]
-  digest = "1:877a7b1fde02c6335f08964cd2125625d3e62a20c60fc80ef612bdb64ebc017e"
+  digest = "1:4715c93d153a71918d329a232bf92685f10d7c476e11d3b72e3c6988dc67cac9"
   name = "github.com/Assada/consul-generator"
   packages = [
-    "child",
     "client",
     "config",
     "logging",
@@ -16,8 +15,8 @@
     "version",
   ]
   pruneopts = "UT"
-  revision = "eabff6d68df1574c8d47221f5465583cb5f185c9"
-  version = "v0.2.1"
+  revision = "fa40f0793ae3b31870fd3207f761567e011ac181"
+  version = "v0.2.2"
 
 [[projects]]
   digest = "1:50e70688f601c4d8998ad3f1b7b4bda9fb8675afc78c254eae131da19c856154"
@@ -113,14 +112,6 @@
   pruneopts = "UT"
   revision = "d6574a5bb1226678d7010325fb6c985db20ee458"
   version = "v0.8.1"
-
-[[projects]]
-  digest = "1:7efe48dea4db6b35dcc15e15394b627247e5b3fb814242de986b746ba8e0abf0"
-  name = "github.com/mattn/go-shellwords"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "02e3cf038dcea8290e44424da473dd12be796a8a"
-  version = "v1.0.3"
 
 [[projects]]
   digest = "1:78bbb1ba5b7c3f2ed0ea1eab57bdd3859aec7e177811563edc41198a760b06af"
