@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"consul-generator/child"
-	"consul-generator/config"
-	"consul-generator/processor"
+	"github.com/Assada/consul-generator/child"
+	"github.com/Assada/consul-generator/config"
+	"github.com/Assada/consul-generator/processor"
 
 	"github.com/mattn/go-shellwords"
 	"github.com/pkg/errors"

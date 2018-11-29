@@ -2,6 +2,24 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:cda20e57d6ec7d9377108db82c8bf7dc7145ca6ec4bd5aa005209253f674510e"
+  name = "github.com/Assada/consul-generator"
+  packages = [
+    "child",
+    "client",
+    "config",
+    "logging",
+    "manager",
+    "processor",
+    "signals",
+    "test",
+    "version",
+  ]
+  pruneopts = "UT"
+  revision = "df5820d1d7e042a3712e1e115ee3f646b32303e2"
+
+[[projects]]
   digest = "1:50e70688f601c4d8998ad3f1b7b4bda9fb8675afc78c254eae131da19c856154"
   name = "github.com/hashicorp/consul"
   packages = [
@@ -140,6 +158,15 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/Assada/consul-generator/child",
+    "github.com/Assada/consul-generator/client",
+    "github.com/Assada/consul-generator/config",
+    "github.com/Assada/consul-generator/logging",
+    "github.com/Assada/consul-generator/manager",
+    "github.com/Assada/consul-generator/processor",
+    "github.com/Assada/consul-generator/signals",
+    "github.com/Assada/consul-generator/test",
+    "github.com/Assada/consul-generator/version",
     "github.com/hashicorp/consul-template/signals",
     "github.com/hashicorp/consul/api",
     "github.com/hashicorp/consul/testutil",
