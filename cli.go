@@ -126,6 +126,7 @@ func (cli *Cli) Run(args []string) int {
 			}
 			return logError(err, code)
 		case <-runner.DoneCh:
+			runner.Stop()
 			return ExitCodeOK
 		case s := <-cli.signalCh:
 			log.Printf("[DEBUG] (cli) receiving signal %q", s)
@@ -135,7 +136,6 @@ func (cli *Cli) Run(args []string) int {
 				fmt.Fprintf(cli.errStream, "Reloading configuration...\n")
 				runner.Stop()
 
-				// Re-parse any configuration files or paths
 				config, err = loadConfigs(paths, cliConfig)
 				if err != nil {
 					return logError(err, ExitCodeConfigError)
@@ -157,16 +157,9 @@ func (cli *Cli) Run(args []string) int {
 				fmt.Fprintf(cli.errStream, "Cleaning up...\n")
 				runner.Stop()
 				return ExitCodeInterrupt
-			case signals.SignalLookup["SIGCHLD"]:
-				// The SIGCHLD signal is sent to the parent of a child process when it
-				// exits, is interrupted, or resumes after being interrupted. We ignore
-				// this signal because the child process is monitored on its own.
-				//
-				// Also, the reason we do a lookup instead of a direct syscall.SIGCHLD
-				// is because that isn't defined on Windows.
 			default:
-				// Propagate the signal to the child process
-				runner.Signal(s)
+				runner.Stop()
+				return ExitCodeInterrupt
 			}
 		case <-cli.stopCh:
 			return ExitCodeOK
