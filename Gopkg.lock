@@ -2,8 +2,7 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:cda20e57d6ec7d9377108db82c8bf7dc7145ca6ec4bd5aa005209253f674510e"
+  digest = "1:877a7b1fde02c6335f08964cd2125625d3e62a20c60fc80ef612bdb64ebc017e"
   name = "github.com/Assada/consul-generator"
   packages = [
     "child",
@@ -17,7 +16,8 @@
     "version",
   ]
   pruneopts = "UT"
-  revision = "df5820d1d7e042a3712e1e115ee3f646b32303e2"
+  revision = "eabff6d68df1574c8d47221f5465583cb5f185c9"
+  version = "v0.2.1"
 
 [[projects]]
   digest = "1:50e70688f601c4d8998ad3f1b7b4bda9fb8675afc78c254eae131da19c856154"
@@ -33,12 +33,12 @@
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:4f185079f362d62e2be3a22360ede3ad7ec077e28cf32af4598a93bc53425edd"
+  digest = "1:f94addeed89e043b111b5f83c6a8d658776aed3414e3f1e5c97fa80a419db4fe"
   name = "github.com/hashicorp/consul-template"
   packages = ["signals"]
   pruneopts = "UT"
-  revision = "cfe084f488f915b3e41b00824a3e07d79e3677aa"
-  version = "v0.19.0"
+  revision = "f8c8205caf458dfd0ecab69d029ab112803aa587"
+  version = "v0.19.5"
 
 [[projects]]
   digest = "1:f47d6109c2034cb16bd62b220e18afd5aa9d5a1630fe5d937ad96a4fb7cbb277"
@@ -139,12 +139,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
   digest = "1:53bc4cd4914cd7cd52139990d5170d6dc99067ae31c56530621b18b35fc30318"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   pruneopts = "UT"
   revision = "3536a929edddb9a5b34bd6861dc4a9647cb459fe"
-  version = "v1.1.2"
 
 [[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
