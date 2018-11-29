@@ -23,5 +23,7 @@ before_install:
   - mkdir -p ~/bin
   - mv consul ~/bin
   - export PATH="~/bin:$PATH"
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - dep ensure
 
 script: make test
